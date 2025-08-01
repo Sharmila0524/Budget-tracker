@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Tracker - Monthly Summary</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Monthly Summary Page -->
+    <div id="monthlySummaryPage" class="page active">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                <span>Budget Tracker</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="add-transaction.html" class="nav-link"><i class="fas fa-plus"></i> Add Transaction</a></li>
+                <li><a href="search.html" class="nav-link"><i class="fas fa-search"></i> Search</a></li>
+                <li><a href="monthly-summary.html" class="nav-link active"><i class="fas fa-chart-pie"></i> Monthly Summary</a></li>
+                <li><a href="login.html" class="nav-link logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <div class="page-content">
+            <div class="page-header">
+                <h2>Monthly Summary</h2>
+                <div class="month-selector">
+                    <button class="month-nav" onclick="changeMonth(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span id="currentMonth">January 2024</span>
+                    <button class="month-nav" onclick="changeMonth(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-stats">
+                    <div class="summary-card">
+                        <h4>Monthly Income</h4>
+                        <p class="summary-amount positive" id="monthlyIncome">$5,450.00</p>
+                        <small>3 transactions</small>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Monthly Expenses</h4>
+                        <p class="summary-amount negative" id="monthlyExpenses">$3,280.00</p>
+                        <small>24 transactions</small>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Net Savings</h4>
+                        <p class="summary-amount positive" id="netSavings">$2,170.00</p>
+                        <small>39.8% savings rate</small>
+                    </div>
+                </div>
+
+                <div class="pie-chart-container">
+                    <h3>Expense Breakdown</h3>
+                    <div class="pie-chart" id="pieChart">
+                        <svg viewBox="0 0 200 200" class="pie-svg">
+                            <circle cx="100" cy="100" r="80" class="pie-slice" style="stroke-dasharray: 94.2 251.3; stroke-dashoffset: 0; stroke: #3B82F6;" data-category="Food" data-amount="1500"></circle>
+                            <circle cx="100" cy="100" r="80" class="pie-slice" style="stroke-dasharray: 62.8 251.3; stroke-dashoffset: -94.2; stroke: #8B5CF6;" data-category="Transport" data-amount="1000"></circle>
+                            <circle cx="100" cy="100" r="80" class="pie-slice" style="stroke-dasharray: 47.1 251.3; stroke-dashoffset: -157; stroke: #10B981;" data-category="Shopping" data-amount="750"></circle>
+                            <circle cx="100" cy="100" r="80" class="pie-slice" style="stroke-dasharray: 31.4 251.3; stroke-dashoffset: -204.1; stroke: #F59E0B;" data-category="Bills" data-amount="500"></circle>
+                            <circle cx="100" cy="100" r="80" class="pie-slice" style="stroke-dasharray: 15.7 251.3; stroke-dashoffset: -235.5; stroke: #EF4444;" data-category="Entertainment" data-amount="250"></circle>
+                        </svg>
+                        <div class="pie-center">
+                            <span class="pie-total">$4,000</span>
+                            <small>Total Expenses</small>
+                        </div>
+                    </div>
+                    <div class="pie-legend">
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #3B82F6;"></span>
+                            <span class="legend-label">Food (37.5%)</span>
+                            <span class="legend-amount">$1,500</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #8B5CF6;"></span>
+                            <span class="legend-label">Transport (25%)</span>
+                            <span class="legend-amount">$1,000</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #10B981;"></span>
+                            <span class="legend-label">Shopping (18.8%)</span>
+                            <span class="legend-amount">$750</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #F59E0B;"></span>
+                            <span class="legend-label">Bills (12.5%)</span>
+                            <span class="legend-amount">$500</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background: #EF4444;"></span>
+                            <span class="legend-label">Entertainment (6.2%)</span>
+                            <span class="legend-amount">$250</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="trends-section">
+                <h3>Monthly Trends</h3>
+                <div class="trends-grid">
+                    <div class="trend-card">
+                        <div class="trend-header">
+                            <h4>Spending Pattern</h4>
+                            <span class="trend-indicator up">+12%</span>
+                        </div>
+                        <p>Your spending increased by 12% compared to last month. Most increase was in Food category.</p>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-header">
+                            <h4>Savings Goal</h4>
+                            <span class="trend-indicator neutral">78%</span>
+                        </div>
+                        <p>You've achieved 78% of your monthly savings goal. You're $550 away from your target.</p>
+                    </div>
+                    <div class="trend-card">
+                        <div class="trend-header">
+                            <h4>Budget Status</h4>
+                            <span class="trend-indicator down">-5%</span>
+                        </div>
+                        <p>You're 5% under budget this month. Great job staying within your limits!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = localStorage.getItem('budgetTrackerUser');
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Initialize page
+            updateMonthlySummary();
+        });
+
+        function updateMonthlySummary() {
+            updateSummaryStats();
+            updateTrends();
+        }
+
+        function updateSummaryStats() {
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            
+            const monthlyTransactions = transactions.filter(t => {
+                const transactionDate = new Date(t.date);
+                return transactionDate.getMonth() === currentMonth && 
+                       transactionDate.getFullYear() === currentYear;
+            });
+            
+            const monthlyIncome = monthlyTransactions
+                .filter(t => t.type === 'income')
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            const monthlyExpenses = monthlyTransactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            // Update summary cards
+            const monthlyIncomeEl = document.getElementById('monthlyIncome');
+            const monthlyExpensesEl = document.getElementById('monthlyExpenses');
+            const netSavingsEl = document.getElementById('netSavings');
+            
+            if (monthlyIncomeEl) monthlyIncomeEl.textContent = `$${monthlyIncome.toFixed(2)}`;
+            if (monthlyExpensesEl) monthlyExpensesEl.textContent = `$${monthlyExpenses.toFixed(2)}`;
+            if (netSavingsEl) netSavingsEl.textContent = `$${(monthlyIncome - monthlyExpenses).toFixed(2)}`;
+        }
+
+        function changeMonth(direction) {
+            const currentMonthEl = document.getElementById('currentMonth');
+            if (currentMonthEl) {
+                const months = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+                const currentMonth = new Date().getMonth();
+                const newMonth = (currentMonth + direction + 12) % 12;
+                currentMonthEl.textContent = `${months[newMonth]} 2024`;
+            }
+            showSuccessMessage('Month updated. Data refreshed.');
+        }
+
+        function updateTrends() {
+            // Animate trend cards
+            const trendCards = document.querySelectorAll('.trend-card');
+            trendCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.transform = 'translateY(-3px)';
+                    setTimeout(() => {
+                        card.style.transform = 'translateY(0)';
+                    }, 200);
+                }, index * 150);
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('budgetTrackerUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

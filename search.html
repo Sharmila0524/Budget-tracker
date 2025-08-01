@@ -1,0 +1,225 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Tracker - Search</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Search Page -->
+    <div id="searchPage" class="page active">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                <span>Budget Tracker</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="add-transaction.html" class="nav-link"><i class="fas fa-plus"></i> Add Transaction</a></li>
+                <li><a href="search.html" class="nav-link active"><i class="fas fa-search"></i> Search</a></li>
+                <li><a href="monthly-summary.html" class="nav-link"><i class="fas fa-chart-pie"></i> Monthly Summary</a></li>
+                <li><a href="login.html" class="nav-link logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <div class="page-content">
+            <div class="page-header">
+                <h2>Transaction History</h2>
+                <div class="search-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search transactions...">
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-filters">
+                <div class="filter-chips">
+                    <button class="chip active" onclick="filterByType('all')">All</button>
+                    <button class="chip" onclick="filterByType('income')">Income</button>
+                    <button class="chip" onclick="filterByType('expense')">Expenses</button>
+                </div>
+                <div class="sort-controls">
+                    <select id="sortBy" onchange="sortTransactions()">
+                        <option value="date-desc">Date (Newest)</option>
+                        <option value="date-asc">Date (Oldest)</option>
+                        <option value="amount-desc">Amount (High to Low)</option>
+                        <option value="amount-asc">Amount (Low to High)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="search-results">
+                <div class="results-header">
+                    <span id="resultsCount">Showing 0 transactions</span>
+                    <div class="view-options">
+                        <button class="view-btn active" onclick="setView('list')">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <button class="view-btn" onclick="setView('grid')">
+                            <i class="fas fa-th"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="transactions-container" id="searchTransactionsList">
+    <!-- Dummy transactions as fallback -->
+    <div class="transaction-card income">
+        <div class="transaction-info">
+            <h4>Salary</h4>
+            <span>Income • 2025-07-01</span>
+        </div>
+        <div class="transaction-amount">₹50,000</div>
+    </div>
+    <div class="transaction-card expense">
+        <div class="transaction-info">
+            <h4>Grocery Shopping</h4>
+            <span>Food • 2025-07-05</span>
+        </div>
+        <div class="transaction-amount">₹3,200</div>
+    </div>
+    <div class="transaction-card income">
+        <div class="transaction-info">
+            <h4>Freelance Project</h4>
+            <span>Income • 2025-07-10</span>
+        </div>
+        <div class="transaction-amount">₹12,000</div>
+    </div>
+    <div class="transaction-card expense">
+        <div class="transaction-info">
+            <h4>Electricity Bill</h4>
+            <span>Utilities • 2025-07-15</span>
+        </div>
+        <div class="transaction-amount">₹2,100</div>
+    </div>
+    <div class="transaction-card expense">
+        <div class="transaction-info">
+            <h4>Movie Night</h4>
+            <span>Entertainment • 2025-07-18</span>
+        </div>
+        <div class="transaction-amount">₹800</div>
+    </div>
+    <div class="transaction-card income">
+        <div class="transaction-info">
+            <h4>Sold Old Laptop</h4>
+            <span>Electronics • 2025-07-20</span>
+        </div>
+        <div class="transaction-amount">₹8,000</div>
+    </div>
+</div>
+
+
+    <script src="script.js"></script>
+    <script>
+        
+        let filteredTransactions = [];
+
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = localStorage.getItem('budgetTrackerUser');
+            
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Set up search listener
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+            
+            // Initialize page
+            updateSearchPage();
+        });
+
+        function updateSearchPage() {
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            filteredTransactions = [...transactions];
+            displaySearchResults(filteredTransactions);
+            updateResultsCount(filteredTransactions.length);
+        }
+
+        function handleSearch(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            
+            filteredTransactions = transactions.filter(transaction => 
+                transaction.description.toLowerCase().includes(searchTerm) ||
+                transaction.category.toLowerCase().includes(searchTerm)
+            );
+            
+            displaySearchResults(filteredTransactions);
+            updateResultsCount(filteredTransactions.length);
+        }
+
+        function filterByType(type) {
+            // Update active chip
+            const chips = document.querySelectorAll('.chip');
+            chips.forEach(chip => chip.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+            
+            if (type === 'all') {
+                filteredTransactions = [...transactions];
+            } else {
+                filteredTransactions = transactions.filter(t => t.type === type);
+            }
+            
+            displaySearchResults(filteredTransactions);
+            updateResultsCount(filteredTransactions.length);
+        }
+
+        function sortTransactions() {
+            const sortBy = document.getElementById('sortBy').value;
+            
+            filteredTransactions.sort((a, b) => {
+                switch(sortBy) {
+                    case 'date-desc':
+                        return new Date(b.date) - new Date(a.date);
+                    case 'date-asc':
+                        return new Date(a.date) - new Date(b.date);
+                    case 'amount-desc':
+                        return b.amount - a.amount;
+                    case 'amount-asc':
+                        return a.amount - b.amount;
+                    default:
+                        return 0;
+                }
+            });
+            
+            displaySearchResults(filteredTransactions);
+        }
+
+        function displaySearchResults(transactions) {
+            const container = document.getElementById('searchTransactionsList');
+            if (!container) return;
+            
+            container.innerHTML = transactions.map(transaction => 
+                createTransactionHTML(transaction)
+            ).join('');
+        }
+
+        function updateResultsCount(count) {
+            const resultsCount = document.getElementById('resultsCount');
+            if (resultsCount) {
+                resultsCount.textContent = `Showing ${count} transactions`;
+
+            }
+        }
+
+        function setView(viewType) {
+            const viewBtns = document.querySelectorAll('.view-btn');
+            viewBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('budgetTrackerUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+    
+</body>
+</html>  

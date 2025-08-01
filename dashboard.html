@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget Tracker - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="page active">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-wallet"></i>
+                <span>Budget Tracker</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="nav-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="add-transaction.html" class="nav-link"><i class="fas fa-plus"></i> Add Transaction</a></li>
+                <li><a href="search.html" class="nav-link"><i class="fas fa-search"></i> Search</a></li>
+                <li><a href="monthly-summary.html" class="nav-link"><i class="fas fa-chart-pie"></i> Monthly Summary</a></li>
+                <li><a href="login.html" class="nav-link logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
+
+        <div class="dashboard-content">
+            <div class="dashboard-header">
+                <h2>Dashboard Overview</h2>
+                <p>Welcome back! Here's your financial summary</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card income">
+                    <div class="stat-icon">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Income</h3>
+                        <p class="stat-value" id="totalIncome">$5,450.00</p>
+                        <small class="stat-change positive">+12% from last month</small>
+                    </div>
+                </div>
+
+                <div class="stat-card expense">
+                    <div class="stat-icon">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Expenses</h3>
+                        <p class="stat-value" id="totalExpenses">$3,280.00</p>
+                        <small class="stat-change negative">+8% from last month</small>
+                    </div>
+                </div>
+
+                <div class="stat-card balance">
+                    <div class="stat-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Current Balance</h3>
+                        <p class="stat-value" id="currentBalance">$2,170.00</p>
+                        <small class="stat-change positive">Available balance</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Monthly Expenses by Category</h3>
+                    <div class="chart-controls">
+                        <select id="chartPeriod">
+                            <option value="current">Current Month</option>
+                            <option value="last">Last Month</option>
+                            <option value="quarter">This Quarter</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bar-chart" id="expenseChart">
+                    <div class="chart-bars">
+                        <div class="bar-group">
+                            <div class="bar" style="height: 80%" data-value="1200" data-height="80%"></div>
+                            <span class="bar-label">Food</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 65%" data-value="980" data-height="65%"></div>
+                            <span class="bar-label">Transport</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 45%" data-value="680" data-height="45%"></div>
+                            <span class="bar-label">Shopping</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 35%" data-value="520" data-height="35%"></div>
+                            <span class="bar-label">Bills</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 25%" data-value="380" data-height="25%"></div>
+                            <span class="bar-label">Entertainment</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-transactions">
+                <div class="section-header">
+                    <h3>Recent Transactions</h3>
+                    <button class="view-all-btn" onclick="window.location.href='search.html'">View All</button>
+                </div>
+                <div class="transactions-list" id="recentTransactionsList">
+                    <!-- Transactions will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = localStorage.getItem('budgetTrackerUser');
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Initialize dashboard
+            updateDashboard();
+        });
+
+        function logout() {
+            localStorage.removeItem('budgetTrackerUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
